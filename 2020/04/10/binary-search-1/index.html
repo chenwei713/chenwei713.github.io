@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Chenwei">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="https://chenwei713.github.io//img/NYC2.jpg">
+    <meta property="twitter:image" content="https://chenwei713.github.io//img/NYC2.jpg" />
+    
+
+    
+    <meta name="title" content="Binary search I" />
+    <meta property="og:title" content="Binary search I" />
+    <meta property="twitter:title" content="Binary search I" />
+    
+
+    
+    <meta name="description" content="What is binary search and when to use binary search">
+    <meta property="og:description" content="What is binary search and when to use binary search" />
+    <meta property="twitter:description" content="What is binary search and when to use binary search" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="Chenwei Xie Key word">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>Binary search I-Chenwei Xie</title>
+
+    <link rel="canonical" href="/2020/04/10/binary-search-1/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+    
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Chenwei</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/tech">tech</a>
+                        </li>
+                        
+                    
+                    
+		    
+                        <li><a href="/top/about/">ABOUT</a></li>
+                    
+
+                    
+		    <li>
+                        <a href="/search">SEARCH <img src="/img/search.png" height="15" style="cursor: pointer;" alt="Search"></a>
+		    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/NYC2.jpg')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                    </div>
+                    <h1>Binary search I</h1>
+                    <h2 class="subheading">Binary search problems</h2>
+                    <span class="meta">
+                        Posted by 
+                        
+                            Chenwei Xie
+                         
+                        on 
+                        Friday, April 10, 2020
+                        
+                        
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#bianary-search-i">Bianary Search I</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                
+                <h2 id="bianary-search-i">Bianary Search I</h2>
+<p>Today&rsquo;s topic is <em><strong>binary search</strong></em>.</p>
+<p>First, let&rsquo;s start with an easy question.</p>
+<blockquote>
+<p>Given an sorted a array of n elements, write a function to search a given element x in this array.</p>
+</blockquote>
+<p>The straightforward solution is simple, we can iterate this array and compare each element with x. This solution is also called <em><strong>linear search</strong></em>. The time complexity is O(N).</p>
+<p>Can it be better? Sure, the answer is <em><strong>binary search</strong></em>.</p>
+<p>Since the array is sorted, we can first divide the array into two halves by the element in the middle. What we know is all the elements in the left half is no larger than the elements in the right half. So if we can know the target elements in one half, we can discard another half. This is the basic idea of binary search.</p>
+<p>Let the time complexity of this algorithm be T(N).
+Then we can have this formula:</p>
+<pre><code>T(N) = T(N / 2) + O(1)
+</code></pre><p>So the time complexity for <em><strong>binary search</strong></em> is <strong>log(N)</strong>.</p>
+<p>Now, we can implement it by code:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#8be9fd">int</span> <span style="color:#50fa7b">binarySearch</span><span style="color:#ff79c6">(</span><span style="color:#8be9fd">int</span><span style="color:#ff79c6">[]</span> arr<span style="color:#ff79c6">,</span> <span style="color:#8be9fd">int</span> target<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
+	<span style="color:#ff79c6">if</span><span style="color:#ff79c6">(</span>arr<span style="color:#ff79c6">.</span><span style="color:#50fa7b">length</span> <span style="color:#ff79c6">==</span> <span style="color:#ff79c6">null</span><span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
+		<span style="color:#ff79c6">return</span> <span style="color:#ff79c6">-</span>1<span style="color:#ff79c6">;</span>
+	<span style="color:#ff79c6">}</span>
+	
+	<span style="color:#8be9fd">int</span> low <span style="color:#ff79c6">=</span> 0<span style="color:#ff79c6">;</span>
+	<span style="color:#8be9fd">int</span> high <span style="color:#ff79c6">=</span> arr<span style="color:#ff79c6">.</span><span style="color:#50fa7b">length</span> <span style="color:#ff79c6">-</span> 1<span style="color:#ff79c6">;</span>
+	<span style="color:#8be9fd">int</span> mid <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">(</span>low <span style="color:#ff79c6">+</span> high<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">/</span> 2<span style="color:#ff79c6">;</span>
+	
+	<span style="color:#ff79c6">while</span> <span style="color:#ff79c6">(</span>low <span style="color:#ff79c6">&lt;</span> high <span style="color:#ff79c6">&amp;&amp;</span> arr<span style="color:#ff79c6">[</span>mid<span style="color:#ff79c6">]</span> <span style="color:#ff79c6">!=</span> target<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
+		<span style="color:#ff79c6">if</span><span style="color:#ff79c6">(</span>arr<span style="color:#ff79c6">[</span>mid<span style="color:#ff79c6">]</span> <span style="color:#ff79c6">&lt;</span> target<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
+			low <span style="color:#ff79c6">=</span> mid <span style="color:#ff79c6">+</span> 1<span style="color:#ff79c6">;</span>
+		<span style="color:#ff79c6">}</span> <span style="color:#ff79c6">else</span> <span style="color:#ff79c6">{</span>
+			high <span style="color:#ff79c6">=</span> mid <span style="color:#ff79c6">-</span> 1<span style="color:#ff79c6">;</span>
+		<span style="color:#ff79c6">}</span>
+		mid <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">(</span>high <span style="color:#ff79c6">+</span> low<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">/</span> 2<span style="color:#ff79c6">;</span>
+	<span style="color:#ff79c6">}</span>
+	
+	<span style="color:#ff79c6">return</span> nums<span style="color:#ff79c6">[</span>mid<span style="color:#ff79c6">]</span> <span style="color:#ff79c6">==</span> target <span style="color:#ff79c6">?</span> mid <span style="color:#ff79c6">:</span> <span style="color:#ff79c6">-</span>1<span style="color:#ff79c6">;</span>
+<span style="color:#ff79c6">}</span>
+</code></pre></div><p>We can also use the Java library to do that:</p>
+<pre><code>int index = Arrays.binarySearch(arr, target);
+</code></pre><p>You can check out more infomation about this method by this link: <a href="https://www.tutorialspoint.com/java/util/arrays_binarysearch_object.htm">Binary Search</a></p>
+<p>Now, let&rsquo;s have a look at a more complex problem.</p>
+<blockquote>
+<p>Suppose an array sorted in ascending order is rotated at some pivot unknown to you beforehand.<br>
+(i.e., [0,1,2,4,5,6,7] might become [4,5,6,7,0,1,2]).<br>
+You are given a target value to search. If found in the array return its index, otherwise return -1.<br>
+You may assume no duplicate exists in the array.
+Your algorithm&rsquo;s runtime complexity must be in the order of O(log n).</p>
+</blockquote>
+<p>It&rsquo;s obvious that we can do a linear search to find the target value in the array, but the time complexity will be O(n).</p>
+<p>So we need binary search. But how?</p>
+<p>There are more than one solution for this problem. Let me tell you my approach.</p>
+<p>First, we can get the middle element <strong>arr[mid]</strong> in this array, if the element equals <strong>target</strong>, then we are done. Otherwise, we need to decide which half the target element can be there.</p>
+<p>So let us think about this: In which case the target must be in the left half?</p>
+<p>One case is when the <strong>arr[mid]</strong> is larger than <strong>arr[low]</strong> and target is in the range or this two elements:</p>
+<ul>
+<li><strong>arr[low]</strong> &lt;= target &lt; <strong>arr[mid]</strong>.</li>
+</ul>
+<p>What does <strong>arr[low]</strong> &lt;= <strong>arr[mid]</strong> mean? That means the left half is not rotated, so if target is in this range, then the target must be in this half. Otherwise, the target must be in the right half.</p>
+<p>So now, in the case of <strong>arr[low]</strong> &lt;= <strong>arr[mid]</strong>, we can divide this array into two half and discard one half after once compare, which means we can binary search in it.</p>
+<p>The code is like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#ff79c6">if</span> <span style="color:#ff79c6">(</span>arr<span style="color:#ff79c6">[</span>mid<span style="color:#ff79c6">]</span> <span style="color:#ff79c6">&gt;=</span> arr<span style="color:#ff79c6">[</span>low<span style="color:#ff79c6">])</span> <span style="color:#ff79c6">{</span>
+	<span style="color:#ff79c6">if</span> <span style="color:#ff79c6">(</span>target <span style="color:#ff79c6">&gt;=</span> arr<span style="color:#ff79c6">[</span>low<span style="color:#ff79c6">]</span> <span style="color:#ff79c6">&amp;&amp;</span> target <span style="color:#ff79c6">&lt;</span> arr<span style="color:#ff79c6">[</span>mid<span style="color:#ff79c6">])</span> <span style="color:#ff79c6">{</span>
+		high <span style="color:#ff79c6">=</span> mid <span style="color:#ff79c6">-</span> 1<span style="color:#ff79c6">;</span>
+	<span style="color:#ff79c6">}</span> <span style="color:#ff79c6">else</span> <span style="color:#ff79c6">{</span>
+		low <span style="color:#ff79c6">=</span> mid <span style="color:#ff79c6">+</span> 1<span style="color:#ff79c6">;</span>
+	<span style="color:#ff79c6">}</span>
+<span style="color:#ff79c6">}</span>
+</code></pre></div><p>What if <strong>arr[low]</strong> &gt; <strong>arr[mid]</strong>?</p>
+<p>Similarly,  <strong>arr[low]</strong> &gt; <strong>arr[mid]</strong> means left half is rotated and right half is not. So if <strong>arr[mid]</strong> &lt; target &lt;= <strong>arr[high]</strong>, we are sure that target is in the right half.</p>
+<p>We can also have code:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#ff79c6">if</span> <span style="color:#ff79c6">(</span>arr<span style="color:#ff79c6">[</span>mid<span style="color:#ff79c6">]</span> <span style="color:#ff79c6">&lt;</span> arr<span style="color:#ff79c6">[</span>low<span style="color:#ff79c6">])</span> <span style="color:#ff79c6">{</span>
+	<span style="color:#ff79c6">if</span> <span style="color:#ff79c6">(</span>target <span style="color:#ff79c6">&gt;</span> arr<span style="color:#ff79c6">[</span>mid<span style="color:#ff79c6">]</span> <span style="color:#ff79c6">&amp;&amp;</span> target <span style="color:#ff79c6">&lt;=</span> arr<span style="color:#ff79c6">[</span>high<span style="color:#ff79c6">])</span> <span style="color:#ff79c6">{</span>
+		low <span style="color:#ff79c6">=</span> mid <span style="color:#ff79c6">+</span> 1<span style="color:#ff79c6">;</span>
+	<span style="color:#ff79c6">}</span> <span style="color:#ff79c6">else</span> <span style="color:#ff79c6">{</span>
+		high <span style="color:#ff79c6">=</span> mid <span style="color:#ff79c6">-</span> 1<span style="color:#ff79c6">;</span>
+	<span style="color:#ff79c6">}</span>
+<span style="color:#ff79c6">}</span>
+</code></pre></div><p>In conclusion, the algorithm has two steps:</p>
+<ul>
+<li>
+<p>STEP 1:</p>
+<p>If <strong>arr[mid]</strong> equals <strong>target</strong>, we are <strong>done</strong>.</p>
+<p>Otherwise, Compare the <strong>arr[mid]</strong> with <strong>arr[low]</strong></p>
+</li>
+<li>
+<p>STEP 2:</p>
+<p>If <strong>arr[mid]</strong> is larger than <strong>arr[low]</strong>, check if target in the range of <strong>arr[low]</strong> and <strong>arr[mid]</strong>. If it is, discard the right half, otherwise discard the left half.</p>
+<p>If <strong>arr[mid]</strong> is smaller than <strong>arr[low]</strong>, check if target in the range of <strong>arr[mid]</strong> and <strong>arr[high]</strong>. If it is, discard the left half, otherwise discard the right half.</p>
+<p>go back step 1.</p>
+</li>
+</ul>
+<p>This is a classic <a href="https://leetcode.com/problems/search-in-rotated-sorted-array/">problem</a> in Leetcode.</p>
+<h3 id="summary">summary</h3>
+<p>Binary search is not a complex algorithm. The most important thing about binary search is you should know when to use it.</p>
+<p>Many people say that we can use binary search when the data is sorted. It is true, but sorted is not the key. The key is in each <strong>iteration</strong>, we can <strong>discard</strong> half of data and <strong>search</strong> in the other half. That is the reason why the time complexity of binary search O(log n).</p>
+
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/welcome/" data-toggle="tooltip" data-placement="top" title="">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+
+                
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                    
+                    <li>
+                        <a href="mailto:cx608@nyu.edu">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+
+                    
+
+		    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/yourgithub">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/chenwei-xie-9aa837133/">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            <li>
+                <a target="_blank" href="https://www.instagram.com/chenwei713/">
+                    <span class="fa-stack fa-lg">
+                        <i class="fa fa-circle fa-stack-2x"></i>
+                        <i class="fa fa-instagram fa-stack-1x fa-inverse"></i>
+                    </span>
+                </a>
+            </li>
+            
+            
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Chenwei 2020
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+</body>
+</html>

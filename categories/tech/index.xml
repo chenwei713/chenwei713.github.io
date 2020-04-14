@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>tech on Chenwei</title>
+    <link>https://chenwei713.github.io/categories/tech/</link>
+    <description>Recent content in tech on Chenwei</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 10 Apr 2020 15:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://chenwei713.github.io/categories/tech/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Binary search I</title>
+      <link>https://chenwei713.github.io/2020/04/10/binary-search-1/</link>
+      <pubDate>Fri, 10 Apr 2020 15:00:00 +0000</pubDate>
+      
+      <guid>https://chenwei713.github.io/2020/04/10/binary-search-1/</guid>
+      <description>Bianary Search I Today&amp;rsquo;s topic is binary search.
+First, let&amp;rsquo;s start with an easy question.
+ Given an sorted a array of n elements, write a function to search a given element x in this array.
+ The straightforward solution is simple, we can iterate this array and compare each element with x. This solution is also called linear search. The time complexity is O(N).
+Can it be better? Sure, the answer is binary search.</description>
+    </item>
+    
+  </channel>
+</rss>
